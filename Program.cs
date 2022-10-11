@@ -1,5 +1,7 @@
 using System;
+using System.IO;
 using Gtk;
+using Newtonsoft.Json.Linq;
 
 namespace Weather_App
 {
@@ -8,6 +10,8 @@ namespace Weather_App
         [STAThread]
         public static void Main(string[] args)
         {
+            VerifyFiles();
+
             Application.Init();
 
             var app = new Application("org.Weather_App.Weather_App", GLib.ApplicationFlags.None);
@@ -18,6 +22,27 @@ namespace Weather_App
 
             win.Show();
             Application.Run();
+        }
+
+        private static void VerifyFiles()
+        {
+            if (!File.Exists(@"./options.json"))
+            {
+                string def = @"{
+                    'lang': 'fr',
+                    'cities': [],
+                    'defaultCity': ''
+                }";
+                File.WriteAllText(@"./options.json", JObject.Parse(def).ToString());
+            }
+
+            if (!File.Exists(@"./config.json"))
+            {
+                string def = @"{
+                    'API_KEY': ''
+                }";
+                File.WriteAllText(@"./config.txt", JObject.Parse(def).ToString());
+            }
         }
     }
 }
