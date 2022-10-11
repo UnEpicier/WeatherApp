@@ -1,0 +1,14 @@
+# CSharp files
+bin/
+obj/
+
+# VSCode files
+.vscode/
+
+# Glade temporary files
+*.glade~
+*.glade#
+
+# Config & Params file
+config.json
+options.json
