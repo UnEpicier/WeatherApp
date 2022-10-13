@@ -1,33 +1,14 @@
-<h1 align="center">Weather App</h1>
+<h1 align="center">Weather App - Partie recherche</h1>
 
-# Sommaire
+This branch is a dev part of the project, it will contains the search part of the app.<br/>
+Adding a new city to client's favourites cities. And will display some basics informations about it such as:
 
-- [Prérequis](#prérequis)
+Cette branche est une partie de développement du projet, elle contiendra la partie de recherche de l'application.<br/>
+Elle permettre d'ajouter une nouvelle ville aux favoris de l'utilisateur et affichera quelques informations basiques comme :
 
-# Prérequis
-
-Afin de pouvoir lancer l'application, il faut dans un premier temps plusieurs choses:
-
-- [Dotnet 6](https://dotnet.microsoft.com/en-us/download)
-- Gtk
-  Pour installer Gtk, on fait ces commandes :
-  ```sh
-  $ dotnet new --install GtkSharp.Template.CSharp
-  # Si vous avez des erreurs:
-  $ dotnet restore
-  ```
-- Newtonsoft
-  Une librairie qui permet de manipuler des objets JSON en C#. Pour l'installer faites :
-  ```sh
-  $ dotnet add package Newtonsoft.Json
-  ```
-
-Lancez une première fois l'application est refermez-la, deux fichers ce sont créés, ouvrez le fichier `config.json`.
-Mettez-le de côté et créez-vous une clé API sur [OpenWeatherMap](https://openweathermap.org/api).
-Et enfin, mettez cette clé dans le fichier de cette façon :
-
-```json
-{
-  "API_KEY": "<votre clé>"
-}
-```
+- Le nom de la ville;
+- La latitude et la longitude de la ville;
+- La température en degré Celsius;
+- Courte description du temps (exemple : _ciel dégagé_);
+- L’humidité;
+- Une image représentative de la météo;
