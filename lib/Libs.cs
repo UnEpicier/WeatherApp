@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.Net.NetworkInformation;
 using Newtonsoft.Json.Linq;
@@ -92,6 +93,47 @@ namespace Libs
                 return ex != null ? false : false;
             }
             return connectionExists;
+        }
+
+        public static DateTime UnixTimeStampToDateTime(double unixTimeStamp)
+        {
+            // Unix timestamp is seconds past epoch
+            DateTime dateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
+            dateTime = dateTime.AddSeconds(unixTimeStamp).ToUniversalTime();
+            return dateTime;
+        }
+
+        public static string DegreeToDir(int degree)
+        {
+            if (degree > 22.5 && degree <= 67.5)
+            {
+                return "NE";
+            }
+            else if (degree > 67.5 && degree <= 112.5)
+            {
+                return "E";
+            }
+            else if (degree > 112.5 && degree <= 157.5)
+            {
+                return "SE";
+            }
+            else if (degree > 157.5 && degree <= 202.5)
+            {
+                return "S";
+            }
+            else if (degree > 202.5 && degree <= 247.5)
+            {
+                return "SO";
+            }
+            else if (degree > 247.5 && degree <= 292.5)
+            {
+                return "O";
+            }
+            else if (degree > 292.5 && degree <= 337.5)
+            {
+                return "NO";
+            }
+            return "";
         }
     }
 }
