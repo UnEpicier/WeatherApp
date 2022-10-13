@@ -33,19 +33,40 @@ namespace Libs
 
         public static string FirstLaunch()
         {
-            JObject f = JObject.Parse(File.ReadAllText("./config.json"));
+            bool fl = VerifyFiles();
 
-            if (Libs.GlobalLib.VerifyFiles() || !File.Exists("./config.json"))
+            if (fl)
             {
                 return "firstLaunch";
             }
-
-            if (
-                (File.Exists("./config.json") && f.ContainsKey("API_KEY")) &&
-                (string.IsNullOrEmpty(f.GetValue("API_KEY")?.ToString()) || string.IsNullOrWhiteSpace(f.GetValue("API_KEY")?.ToString()))
-            )
+            else
             {
-                return "missing";
+                // ? config.json
+                JObject f = JObject.Parse(File.ReadAllText("./config.json"));
+
+                if (!f.ContainsKey("API_KEY"))
+                {
+                    File.Delete("./config.json");
+                    VerifyFiles();
+                    return "missing";
+                }
+                else
+                {
+
+                    if (string.IsNullOrEmpty(f.GetValue("API_KEY")?.ToString()) || string.IsNullOrWhiteSpace(f.GetValue("API_KEY")?.ToString()))
+                    {
+                        return "missing";
+                    }
+                }
+
+                // ? options.json
+                JObject c = JObject.Parse(File.ReadAllText("./options.json"));
+                if (!c.ContainsKey("lang") || !c.ContainsKey("cities") || !c.ContainsKey("defaultCity"))
+                {
+                    File.Delete("./options.json");
+                    VerifyFiles();
+                    return "options";
+                }
             }
 
             return "";
