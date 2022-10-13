@@ -31,6 +31,26 @@ namespace Libs
             return firstLaunch;
         }
 
+        public static string FirstLaunch()
+        {
+            JObject f = JObject.Parse(File.ReadAllText("./config.json"));
+
+            if (Libs.GlobalLib.VerifyFiles() || !File.Exists("./config.json"))
+            {
+                return "firstLaunch";
+            }
+
+            if (
+                (File.Exists("./config.json") && f.ContainsKey("API_KEY")) &&
+                (string.IsNullOrEmpty(f.GetValue("API_KEY")?.ToString()) || string.IsNullOrWhiteSpace(f.GetValue("API_KEY")?.ToString()))
+            )
+            {
+                return "missing";
+            }
+
+            return "";
+        }
+
         public static bool HasConnectivity()
         {
             bool connectionExists = false;

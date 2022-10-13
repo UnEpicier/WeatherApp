@@ -9,14 +9,12 @@ namespace Weather_App
 {
     class MainWindow : Window
     {
-        // ? Error Window
+        /*
+         ? Custom Error Window
+         */
         [UI] private Dialog ErrorDialog = null;
+        [UI] private Label ErrorText = null;
         [UI] private Button ErrorButton = null;
-
-        // ? First Launch Window
-        [UI] private Dialog FirstLaunchDialog = null;
-        [UI] private Label FirstLaunchLabel = null;
-        [UI] private Button FirstLaunchButton = null;
 
         public MainWindow() : this(new Builder("MainWindow.glade")) { }
 
@@ -24,33 +22,35 @@ namespace Weather_App
         {
             builder.Autoconnect(this);
 
+            //? Global
             DeleteEvent += Window_DeleteEvent;
+            ErrorButton.Clicked += QuitApplication_Clicked;
 
-            // ? First Launch Window
-            string flState = FirstLaunch();
+            //? If it's the first launch or missing files/api key
+            string flState = Libs.GlobalLib.FirstLaunch();
             if (flState != "")
             {
                 if (flState == "firstLaunch")
                 {
-                    FirstLaunchLabel.Text = @"This is the first launch, components files has been created.
+                    ErrorText.Text = @"This is the first launch, components files has been created.
 Please retart the application after doing
 the setup mentionned in the README.md";
                 }
                 else if (flState == "missing")
                 {
-                    FirstLaunchLabel.Text = @"Missing API Key, please re-read README.md and follow the steps
+                    ErrorText.Text = @"Missing API Key, please re-read README.md and follow the steps
 to get an API Key then relaunch the app";
                 }
 
-                FirstLaunchButton.Clicked += QuitApplication_Clicked;
-                FirstLaunchDialog.Show();
+                ErrorDialog.Show();
             }
 
-            // ? Errror Window
+            // ? If any INternet connection
             // Check client connection first
             if (!GlobalLib.HasConnectivity())
             {
-                ErrorButton.Clicked += QuitApplication_Clicked;
+                ErrorText.Text = @"Any Internet connection found.
+Please check this problem then reopen the application.";
                 ErrorDialog.Show();
             }
         }
@@ -65,24 +65,5 @@ to get an API Key then relaunch the app";
             Application.Quit();
         }
 
-        private string FirstLaunch()
-        {
-            JObject f = JObject.Parse(File.ReadAllText("./config.json"));
-
-            if (Libs.GlobalLib.VerifyFiles() || !File.Exists("./config.json"))
-            {
-                return "firstLaunch";
-            }
-
-            if (
-                (File.Exists("./config.json") && f.ContainsKey("API_KEY")) &&
-                (string.IsNullOrEmpty(f.GetValue("API_KEY")?.ToString()) || string.IsNullOrWhiteSpace(f.GetValue("API_KEY")?.ToString()))
-            )
-            {
-                return "missing";
-            }
-
-            return "";
-        }
     }
 }
