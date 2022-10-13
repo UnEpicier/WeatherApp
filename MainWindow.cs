@@ -1,8 +1,6 @@
 using System;
-using System.IO;
 using Gtk;
 using UI = Gtk.Builder.ObjectAttribute;
-using Newtonsoft.Json.Linq;
 using Libs;
 
 namespace Weather_App
@@ -15,6 +13,12 @@ namespace Weather_App
         [UI] private Dialog ErrorDialog = null;
         [UI] private Label ErrorText = null;
         [UI] private Button ErrorButton = null;
+
+        /*
+         ? MainWindow
+         */
+        [UI] private Button Search = null;
+        [UI] private Button Settings = null;
 
         public MainWindow() : this(new Builder("MainWindow.glade")) { }
 
