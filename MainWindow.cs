@@ -93,6 +93,7 @@ Please check this problem then reopen the application.";
                 ErrorDialog.Show();
             }
 
+            JObject options = JObject.Parse(File.ReadAllText("options.json"));
 
             /*
              ? Search Window
@@ -100,6 +101,13 @@ Please check this problem then reopen the application.";
             Search.Clicked += Search_Clicked;
             SearchButton.Clicked += SearchButton_Clicked;
             SearchAdd.Clicked += SearchAdd_Clicked;
+            SearchWindow.DeleteEvent += SearchWindow_DeleteEvent;
+            if (options["defaultCity"].ToString() == "")
+            {
+                SearchWindow.Deletable = false;
+                SearchWindow.Show();
+            }
+
         }
 
         private void Window_DeleteEvent(object sender, DeleteEventArgs a)
@@ -122,7 +130,14 @@ Please check this problem then reopen the application.";
          */
         private void Search_Clicked(object sender, EventArgs a)
         {
+            SearchWindow.Deletable = true;
             SearchWindow.Show();
+        }
+
+        private void SearchWindow_DeleteEvent(object sender, DeleteEventArgs a)
+        {
+            SearchWindow.Hide();
+            a.RetVal = true;
         }
 
         private async void SearchButton_Clicked(object sender, EventArgs a)
@@ -216,11 +231,12 @@ Please check this problem then reopen the application.";
 
             if (options["defaultCity"].ToString() == "" || cities.Count == 0) options["defaultCity"] = SearchCity.Text.Replace(" ", "");
 
-            cities.Add(SearchCity.Text.Replace(" ", ""));
-            options["cities"] = cities;
-
-
-            File.WriteAllText("./options.json", options.ToString());
+            if (cities.Contains(SearchCity.Text.Replace(" ", "")) == false)
+            {
+                cities.Add(SearchCity.Text.Replace(" ", ""));
+                options["cities"] = cities;
+                File.WriteAllText("./options.json", options.ToString());
+            }
 
             SearchWindow.Hide();
         }
