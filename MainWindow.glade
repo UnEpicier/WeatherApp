@@ -170,7 +170,7 @@
                   <placeholder/>
                 </child>
                 <child>
-                  <object class="GtkComboBox">
+                  <object class="GtkComboBoxText" id="Language">
                     <property name="visible">True</property>
                     <property name="can-focus">False</property>
                   </object>
@@ -181,7 +181,7 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkButton">
+                  <object class="GtkButton" id="ChangeLanguage">
                     <property name="label" translatable="yes">Definir</property>
                     <property name="visible">True</property>
                     <property name="can-focus">True</property>

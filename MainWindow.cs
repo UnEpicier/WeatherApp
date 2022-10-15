@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Collections.Generic;
 using Gtk;
 using UI = Gtk.Builder.ObjectAttribute;
 using Newtonsoft.Json.Linq;
@@ -32,6 +33,8 @@ namespace Weather_App
         [UI] private Button SettingsButtonChangeCity = null;
         [UI] private Stack SettingsStack = null;
         [UI] private Entry SettingsCityName = null;
+        [UI] private ComboBoxText Language = null;
+        [UI] private Button ChangeLanguage = null;
 
         public MainWindow() : this(new Builder("MainWindow.glade")) { }
 
@@ -82,16 +85,19 @@ Please check this problem then reopen the application.";
             init_settings();
             SettingsModifyDefaultCity.Clicked += SettingsChangeDefaultCityClicked;
             SettingsButtonChangeCity.Clicked += SettingsChangeCityName;
+            ChangeLanguage.Clicked += SettingsChangelanguage;
 
         }
 
         private void init_settings() {
-            /* JObject lang = JObject.Parse(File.ReadAllText("./language.json"));
-            for (int i = 0; i < lang.Count; i++) {
-                language.Append(i.ToString(), lang[i].ToString());
-            } */
             JObject options = JObject.Parse(File.ReadAllText("./options.json"));
             SettingsCity.Text = options["defaultCity"].ToString();
+            
+            JObject lang = JObject.Parse(File.ReadAllText("./language.json"));
+            for (int i = 0; i < lang["languages"].ToObject<List<string>>().Count; i++) {
+                Language.Append(lang["languages"][i].ToString().Split(" ")[0], lang["languages"][i].ToString().Split(" ")[1]);
+            }
+            Language.SetActiveId(options["lang"].ToString());
         }
 
         private void SettingsChangeDefaultCityClicked(object sender, EventArgs a) {
@@ -125,6 +131,20 @@ Please check this problem then reopen the application.";
              SettingsStack.GetChildByName("page0").Show();
              SettingsStack.GetChildByName("page2").Hide();
         }
+
+        private void SettingsChangelanguage(object sender, EventArgs a)
+        {
+            JObject options = JObject.Parse(File.ReadAllText("./options.json"));
+            string value = Language.ActiveId;
+            options["lang"] = value;
+            if (options["lang"].ToString() == "en") {
+                options["units"] = "f";
+            }else {
+                options["units"] = "c";
+            }
+            File.WriteAllText("./options.json", options.ToString());
+        }
+
         private void SettingshWindow_DeleteEvent(object sender, DeleteEventArgs a)
         {
             Settings_Window.Hide();
