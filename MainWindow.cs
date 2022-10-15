@@ -91,6 +91,12 @@ namespace Weather_App
         [UI] private Label Temperature5 = null;
         [UI] private Label Humidity5 = null;
 
+        /* 
+         ? Var for API
+         */
+        
+        DateTime today = DateTime.Now;
+        
 
         public MainWindow() : this(new Builder("MainWindow.glade")) { }
 
@@ -151,8 +157,70 @@ Please check this problem then reopen the application.";
         private async void init_MainWindow(){
             JObject options = JObject.Parse(File.ReadAllText("./options.json"));
             FetchAPI api = new FetchAPI();
-            JObject data = await api.GetActualInfos("Bordeaux", "France", "fr");
+            JObject data = await api.GetActualInfos(options["defaultCity"].ToString(), "", options["lang"].ToString());
             data = FetchAPI.FormatData(data, "c");
+            /* JObject dataForecast = await api.GetForecastInfos(); */
+            data = FetchAPI.FormatData(data, options["units"].ToString());
+
+            if (data["list"]["dt_text"].ToString() == string.Format("{0} 12:00:00", today)){
+                ImgToday.Pixbuf = new Gdk.Pixbuf($"./assets/icons/{data["weather"][0]["icon"].ToString()}@4x.png");
+                CityName.Text = data["city"]["name"].ToString();
+                TemperatureOfToday.Text = data["list"]["main"]["temp"].ToString();
+                FeelingsOfToday.Text = data["list"]["main"]["feels_like"].ToString();
+                DescWeatherToday.Text = data["weather"][0]["description"].ToString();
+                Latitude.Text = data["city"]["coord"]["lat"].ToString();
+                Longitude.Text = data["city"]["coord"]["lon"].ToString();
+                TempMin.Text = data["list"]["main"]["temp_min"].ToString();
+                TempMax.Text = data["list"]["main"]["temp_max"].ToString();
+                HumidityOfToday.Text = data["list"]["main"]["humidity"].ToString();
+                WindOfToday.Text = data["list"]["wind"]["speed"].ToString();
+            }
+        
+            if (){
+                DateBox1.Text = data["list"]["dt_text"].ToString();
+                ImgWeather1.Text = data["weather"][0]["icon"].ToString();
+                Description1.Text = data["weather"][0]["description"].ToString();
+                Time1.Text = data["list"]["dt_text"].ToString();
+                Temperature1.Text = data["list"]["main"]["temp"].ToString();
+                Humidity1.Text = data["list"]["main"]["humidity"].ToString();
+            }
+
+            if (){
+                DateBox2.Text = data["list"]["dt_text"].ToString();
+                ImgWeather2.Text = data["weather"][0]["icon"].ToString();
+                Description2.Text = data["weather"][0]["description"].ToString();
+                Time2.Text = data["list"]["dt_text"].ToString();
+                Temperature2.Text = data["list"]["main"]["temp"].ToString();
+                Humidity2.Text = data["list"]["main"]["humidity"].ToString();
+            }
+
+            if (){
+                DateBox3.Text = data["list"]["dt_text"].ToString();
+                ImgWeather3.Text = data["weather"][0]["icon"].ToString();
+                Description3.Text = data["weather"][0]["description"].ToString();
+                Time3.Text = data["list"]["dt_text"].ToString();
+                Temperature3.Text = data["list"]["main"]["temp"].ToString();
+                Humidity3.Text = data["list"]["main"]["humidity"].ToString();
+            }
+
+            if (){
+                DateBox4.Text = data["list"]["dt_text"].ToString();
+                ImgWeather4.Text = data["weather"][0]["icon"].ToString();
+                Description4.Text = data["weather"][0]["description"].ToString();
+                Time4.Text = data["list"]["dt_text"].ToString();
+                Temperature4.Text = data["list"]["main"]["temp"].ToString();
+                Humidity4.Text = data["list"]["main"]["humidity"].ToString();
+            }
+
+            if (){
+                DateBox5.Text = data["list"]["dt_text"].ToString();
+                ImgWeather5.Text = data["weather"][0]["icon"].ToString();
+                Description5.Text = data["weather"][0]["description"].ToString();
+                Time5.Text = data["list"]["dt_text"].ToString();
+                Temperature5.Text = data["list"]["main"]["temp"].ToString();
+                Humidity5.Text = data["list"]["main"]["humidity"].ToString();
+            }
+        
         }
 
     }
