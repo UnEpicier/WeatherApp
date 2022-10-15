@@ -82,6 +82,7 @@ to get an API Key then relaunch the app";
                 }
 
                 ErrorDialog.Show();
+                return;
             }
 
             // ? If any Internet connection
@@ -91,6 +92,7 @@ to get an API Key then relaunch the app";
                 ErrorText.Text = @"Any Internet connection found.
 Please check this problem then reopen the application.";
                 ErrorDialog.Show();
+                return;
             }
 
             JObject options = JObject.Parse(File.ReadAllText("options.json"));
@@ -227,17 +229,9 @@ Please check this problem then reopen the application.";
         private void SearchAdd_Clicked(object sender, EventArgs a)
         {
             JObject options = JObject.Parse(File.ReadAllText("./options.json"));
-            JArray cities = options["cities"].ToObject<JArray>();
+            options["defaultCity"] = SearchCity.Text.Replace(" ", "");
 
-            if (options["defaultCity"].ToString() == "" || cities.Count == 0) options["defaultCity"] = SearchCity.Text.Replace(" ", "");
-
-            if (cities.Contains(SearchCity.Text.Replace(" ", "")) == false)
-            {
-                cities.Add(SearchCity.Text.Replace(" ", ""));
-                options["cities"] = cities;
-                File.WriteAllText("./options.json", options.ToString());
-            }
-
+            File.WriteAllText("./options.json", options.ToString());
             SearchWindow.Hide();
         }
     }

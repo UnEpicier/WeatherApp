@@ -14,8 +14,8 @@ namespace Libs
             {
                 string def = @"{
                     'lang': 'fr',
-                    'cities': [],
-                    'defaultCity': ''
+                    'defaultCity': '',
+                    'units': 'c'
                 }";
                 File.WriteAllText(@"./options.json", JObject.Parse(def).ToString());
             }
@@ -62,7 +62,7 @@ namespace Libs
 
                 // ? options.json
                 JObject c = JObject.Parse(File.ReadAllText("./options.json"));
-                if (!c.ContainsKey("lang") || !c.ContainsKey("cities") || !c.ContainsKey("defaultCity"))
+                if (!c.ContainsKey("lang") || !c.ContainsKey("defaultCity") || !c.ContainsKey("units"))
                 {
                     File.Delete("./options.json");
                     VerifyFiles();

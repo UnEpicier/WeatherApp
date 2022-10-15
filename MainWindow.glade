@@ -355,7 +355,7 @@
                           <object class="GtkImage" id="SearchImage">
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>
-                            <property name="stock">gtk-refresh</property>
+                            <property name="pixbuf">assets\icons\01d@4x.png</property>
                           </object>
                           <packing>
                             <property name="expand">True</property>
@@ -369,7 +369,7 @@
                             <property name="can-focus">False</property>
                             <property name="label" translatable="yes">Description</property>
                             <attributes>
-                              <attribute name="variant" value="title-caps"/>
+                              <attribute name="variant" value="all-small-caps"/>
                             </attributes>
                           </object>
                           <packing>
@@ -656,7 +656,7 @@
                 </child>
                 <child>
                   <object class="GtkButton" id="SearchAdd">
-                    <property name="label" translatable="yes">Ajouter aux favoris</property>
+                    <property name="label" translatable="yes">Définir sur l'accueil</property>
                     <property name="visible">True</property>
                     <property name="can-focus">True</property>
                     <property name="receives-default">True</property>
