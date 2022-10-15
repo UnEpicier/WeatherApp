@@ -13,14 +13,13 @@ namespace API
 
         /**
          * {0} => City name
-         * {1} => Country Code (Optional)
-         * {2} => Lang Code (Optional)
-         * {3} => API_KEY
+         * {1} => Lang Code (Optional)
+         * {2} => API_KEY
          * 
          * Doc: https://openweathermap.org/current#geocoding
          */
-        private static string actualURL = "https://api.openweathermap.org/data/2.5/weather?q={0}{1}{2}&appid={3}";
-        private static string forecastURL = "https://api.openweathermap.org/data/2.5/forecast?q={0}{1}{2}&appid={3}";
+        private static string actualURL = "https://api.openweathermap.org/data/2.5/weather?q={0}{1}&appid={2}";
+        private static string forecastURL = "https://api.openweathermap.org/data/2.5/forecast?q={0}{1}&appid={2}";
 
         public FetchAPI()
         {
@@ -29,20 +28,15 @@ namespace API
             this.API_KEY = config["API_KEY"].ToString();
         }
 
-        public async Task<JObject> GetActualInfos(string city, string country = "", string lang = "")
+        public async Task<JObject> GetActualInfos(string city, string lang = "")
         {
-            string c = "";
             string l = "";
-            if (country != "")
-            {
-                c = $",{country}";
-            }
             if (lang != "")
             {
                 l = $"&lang={lang}";
             }
 
-            string formated = string.Format(actualURL, city, c, l, this.API_KEY);
+            string formated = string.Format(actualURL, city, l, this.API_KEY);
 
             HttpClient client = new HttpClient();
             HttpResponseMessage res = await client.GetAsync(formated);
@@ -58,20 +52,15 @@ namespace API
             return null;
         }
 
-        public async Task<JObject> GetForecastInfos(string city, string country = "", string lang = "")
+        public async Task<JObject> GetForecastInfos(string city, string lang = "")
         {
-            string c = "";
             string l = "";
-            if (country != "")
-            {
-                c = $",{country}";
-            }
             if (lang != "")
                 l = $"&lang={lang}";
             {
             }
 
-            string formated = string.Format(forecastURL, city, c, l, this.API_KEY);
+            string formated = string.Format(forecastURL, city, l, this.API_KEY);
 
             HttpClient client = new HttpClient();
             HttpResponseMessage res = await client.GetAsync(formated);
