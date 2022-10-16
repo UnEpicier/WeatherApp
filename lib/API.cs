@@ -168,12 +168,12 @@ namespace API
 
         private static double ToCelsius(double kelvin)
         {
-            return kelvin - 273.15;
+            return Math.Round(kelvin - 273.15, 2);
         }
 
         private static double ToFahrenheit(double kelvin)
         {
-            return ToCelsius(kelvin) * (9 / 5) + 32;
+            return Math.Round(ToCelsius(kelvin) * (9 / 5) + 32, 2);
         }
     }
 }

@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.Net.NetworkInformation;
 using Newtonsoft.Json.Linq;
@@ -92,6 +93,14 @@ namespace Libs
                 return ex != null ? false : false;
             }
             return connectionExists;
+        }
+
+        public static DateTime UnixTimeStampToDateTime(double unixTimeStamp)
+        {
+            // Unix timestamp is seconds past epoch
+            DateTime dateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
+            dateTime = dateTime.AddSeconds(unixTimeStamp).ToUniversalTime();
+            return dateTime;
         }
 
         public static string DegreeToDir(int degree)
