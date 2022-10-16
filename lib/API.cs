@@ -139,22 +139,42 @@ namespace API
             return data;
         }
 
-        public static JObject FormatForecast(JObject data)
+        public static List<JObject> GetCorrectForecastList(JObject data, string unit)
         {
             if (data.ContainsKey("cnt"))
             {
-                JArray array = (JArray)data["list"];
-                for (int i = 0; i < array.Count; i++)
+                List<JObject> res = new List<JObject>();
+                for (int i = 0; i < data["list"].ToObject<JArray>().Count; i++)
                 {
-                    if (array[i]["dt_txt"].ToString().Split(" ")[1] != "12:00:00")
+                    if (data["list"][i]["dt_txt"].ToString().Split(" ")[1] == "12:00:00")
                     {
-                        array.RemoveAt(i);
+                        res.Add(data["list"][i].ToObject<JObject>());
                     }
                 }
 
-                data["list"] = array;
+                for (int i = 0; i < res.Count; i++)
+                {
+                    if (unit == "c")
+                    {
+                        res[i]["main"]["temp"] = ToCelsius((int)(res[i]["main"]["temp"]));
+                        res[i]["main"]["feels_like"] = ToCelsius((int)(res[i]["main"]["feels_like"]));
+                        res[i]["main"]["temp_min"] = ToCelsius((int)(res[i]["main"]["temp_min"]));
+                        res[i]["main"]["temp_max"] = ToCelsius((int)(res[i]["main"]["temp_max"]));
+                    }
+                    else if (unit == "f")
+                        res[i]["main"]["temp"] = ToFahrenheit((int)(res[i]["main"]["temp"]));
+                    res[i]["main"]["feels_like"] = ToFahrenheit((int)(res[i]["main"]["feels_like"]));
+                    res[i]["main"]["temp_min"] = ToFahrenheit((int)(res[i]["main"]["temp_min"]));
+                    res[i]["main"]["temp_max"] = ToFahrenheit((int)(res[i]["main"]["temp_max"]));
+                    {
+
+                    }
+                }
+
+                return res;
             }
-            return data;
+
+            return new List<JObject>();
         }
 
         private static double ToCelsius(double kelvin)
