@@ -173,6 +173,8 @@ Please check this problem then reopen the application.";
             }
 
             init_MainWindow();
+
+            // ? Settings
             Settings.Clicked += Settings_Show_Cliked;
             Settings_Window.DeleteEvent += SettingshWindow_DeleteEvent;
             init_settings();
@@ -180,79 +182,6 @@ Please check this problem then reopen the application.";
             SettingsButtonChangeCity.Clicked += SettingsChangeCityName;
             ChangeLanguage.Clicked += SettingsChangelanguage;
 
-        }
-
-        private void init_settings()
-        {
-            JObject options = JObject.Parse(File.ReadAllText("./options.json"));
-            SettingsCity.Text = options["defaultCity"].ToString();
-
-            JObject lang = JObject.Parse(File.ReadAllText("./language.json"));
-            for (int i = 0; i < lang["languages"].ToObject<List<string>>().Count; i++)
-            {
-                Language.Append(lang["languages"][i].ToString().Split(" ")[0], lang["languages"][i].ToString().Split(" ")[1]);
-            }
-            Language.SetActiveId(options["lang"].ToString());
-        }
-
-        private void SettingsChangeDefaultCityClicked(object sender, EventArgs a)
-        {
-            SettingsStack.GetChildByName("page1").Show();
-            SettingsStack.GetChildByName("page0").Hide();
-            SettingsStack.GetChildByName("page2").Hide();
-        }
-
-        private async void SettingsChangeCityName(object sender, EventArgs a)
-        {
-            FetchAPI fetch = new FetchAPI();
-            JObject options = JObject.Parse(File.ReadAllText("./options.json"));
-            JObject data = await fetch.GetActualInfos(SettingsCityName.Text, options["lang"].ToString());
-            if (int.Parse(data["cod"].ToString()) == 200)
-            {
-                options["defaultCity"] = SettingsCityName.Text;
-                File.WriteAllText("./options.json", options.ToString());
-                SettingsStack.GetChildByName("page1").Hide();
-                SettingsStack.GetChildByName("page0").Hide();
-                SettingsStack.GetChildByName("page2").Show();
-                SettingsCity.Text = SettingsCityName.Text.Replace(" ", "");
-            }
-            else
-            {
-                ErrorDialog.Title = "City not found";
-                ErrorText.Text = "Any city found with this name";
-                ErrorButton.Clicked -= QuitApplication_Clicked;
-                ErrorButton.Clicked += CloseError_Clicked;
-                ErrorDialog.Show();
-            }
-        }
-        private void Settings_Show_Cliked(object sender, EventArgs a)
-        {
-            Settings_Window.Show();
-            SettingsStack.GetChildByName("page1").Hide();
-            SettingsStack.GetChildByName("page0").Show();
-            SettingsStack.GetChildByName("page2").Hide();
-        }
-
-        private void SettingsChangelanguage(object sender, EventArgs a)
-        {
-            JObject options = JObject.Parse(File.ReadAllText("./options.json"));
-            string value = Language.ActiveId;
-            options["lang"] = value;
-            if (options["lang"].ToString() == "en")
-            {
-                options["units"] = "f";
-            }
-            else
-            {
-                options["units"] = "c";
-            }
-            File.WriteAllText("./options.json", options.ToString());
-        }
-
-        private void SettingshWindow_DeleteEvent(object sender, DeleteEventArgs a)
-        {
-            Settings_Window.Hide();
-            a.RetVal = true;
             JObject options = JObject.Parse(File.ReadAllText("options.json"));
 
             /*
@@ -280,6 +209,14 @@ Please check this problem then reopen the application.";
             Application.Quit();
         }
 
+        private void CloseError_Clicked(object sender, EventArgs a)
+        {
+            ErrorDialog.Hide();
+        }
+
+        /*
+        ? MainWindow
+        */
         private async void init_MainWindow()
         {
             JObject options = JObject.Parse(File.ReadAllText("./options.json"));
@@ -353,9 +290,92 @@ Please check this problem then reopen the application.";
             Humidity5.Text = $"{fcList[4]["main"]["humidity"].ToString()}%";
         }
 
-        private void CloseError_Clicked(object sender, EventArgs a)
+        /*
+        ? SETTINGS
+        */
+
+        private void init_settings()
         {
-            ErrorDialog.Hide();
+            JObject options = JObject.Parse(File.ReadAllText("./options.json"));
+            SettingsCity.Text = options["defaultCity"].ToString();
+
+            JObject lang = JObject.Parse(File.ReadAllText("./language.json"));
+            for (int i = 0; i < lang["languages"].ToObject<List<string>>().Count; i++)
+            {
+                Language.Append(lang["languages"][i].ToString().Split(" ")[0], lang["languages"][i].ToString().Split(" ")[1]);
+            }
+            Language.SetActiveId(options["lang"].ToString());
+        }
+
+        private void SettingsChangeDefaultCityClicked(object sender, EventArgs a)
+        {
+            SettingsStack.GetChildByName("page1").Show();
+            SettingsStack.GetChildByName("page0").Hide();
+            SettingsStack.GetChildByName("page2").Hide();
+        }
+
+        private async void SettingsChangeCityName(object sender, EventArgs a)
+        {
+            FetchAPI fetch = new FetchAPI();
+            JObject options = JObject.Parse(File.ReadAllText("./options.json"));
+            JObject data = await fetch.GetActualInfos(SettingsCityName.Text, options["lang"].ToString());
+            if (int.Parse(data["cod"].ToString()) == 200)
+            {
+                options["defaultCity"] = SettingsCityName.Text;
+                File.WriteAllText("./options.json", options.ToString());
+                SettingsStack.GetChildByName("page1").Hide();
+                SettingsStack.GetChildByName("page0").Hide();
+                SettingsStack.GetChildByName("page2").Show();
+                SettingsCity.Text = SettingsCityName.Text.Replace(" ", "");
+
+                ErrorButton.Clicked += QuitApplication_Clicked;
+                ErrorButton.Clicked -= CloseError_Clicked;
+                ErrorText.Text = "Please restart the app to see change(s).";
+                ErrorDialog.Show();
+            }
+            else
+            {
+                ErrorDialog.Title = "City not found";
+                ErrorText.Text = "Any city found with this name";
+                ErrorButton.Clicked -= QuitApplication_Clicked;
+                ErrorButton.Clicked += CloseError_Clicked;
+                ErrorDialog.Show();
+            }
+        }
+        private void Settings_Show_Cliked(object sender, EventArgs a)
+        {
+            Settings_Window.Show();
+            SettingsStack.GetChildByName("page1").Hide();
+            SettingsStack.GetChildByName("page0").Show();
+            SettingsStack.GetChildByName("page2").Hide();
+        }
+
+        private void SettingsChangelanguage(object sender, EventArgs a)
+        {
+            JObject options = JObject.Parse(File.ReadAllText("./options.json"));
+            string value = Language.ActiveId;
+            options["lang"] = value;
+            if (options["lang"].ToString() == "en")
+            {
+                options["units"] = "f";
+            }
+            else
+            {
+                options["units"] = "c";
+            }
+            File.WriteAllText("./options.json", options.ToString());
+
+
+            ErrorButton.Clicked += QuitApplication_Clicked;
+            ErrorButton.Clicked -= CloseError_Clicked;
+            ErrorText.Text = "Please restart the app to see change(s).";
+            ErrorDialog.Show();
+        }
+
+        private void SettingshWindow_DeleteEvent(object sender, DeleteEventArgs a)
+        {
+            Settings_Window.Hide();
+            a.RetVal = true;
         }
 
         /*
@@ -464,6 +484,12 @@ Please check this problem then reopen the application.";
 
             File.WriteAllText("./options.json", options.ToString());
             SearchWindow.Hide();
+
+            ErrorButton.Clicked += QuitApplication_Clicked;
+            ErrorButton.Clicked -= CloseError_Clicked;
+            ErrorText.Text = "Please restart the app to see change(s).";
+            ErrorDialog.Show();
+
         }
     }
 }
