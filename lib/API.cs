@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using System.Net.Http;
@@ -135,6 +136,24 @@ namespace API
                 }
             }
 
+            return data;
+        }
+
+        public static JObject FormatForecast(JObject data)
+        {
+            if (data.ContainsKey("cnt"))
+            {
+                JArray array = (JArray)data["list"];
+                for (int i = 0; i < array.Count; i++)
+                {
+                    if (array[i]["dt_txt"].ToString().Split(" ")[1] != "12:00:00")
+                    {
+                        array.RemoveAt(i);
+                    }
+                }
+
+                data["list"] = array;
+            }
             return data;
         }
 
